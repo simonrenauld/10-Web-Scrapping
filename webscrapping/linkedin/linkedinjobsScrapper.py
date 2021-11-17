@@ -30,7 +30,7 @@ import time
 
 
 
-url = 'https://www.linkedin.com/jobs/search?keywords=SSIS&location=Vietnam&geoId=104195383&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0'
+url = 'https://www.linkedin.com/jobs/search/?f_AL=true&geoId=91000014&keywords=data&location=Southeast%20Asia'
 
 wd = webdriver.Chrome(executable_path=r'C:/Users/bin/chromedriver')
 wd.get(url)
@@ -159,7 +159,7 @@ job_data = pd.DataFrame({'ID': job_id,
 })
 # cleaning description column
 
-job_data.to_csv('.\outputs\\Raw\\SSIS_Vietnam.csv',encoding='utf-8-sig')       
+job_data.to_csv('.\outputs\\Raw\\dataasia_Vietnam.csv',encoding='utf-8-sig')       
 
 
 

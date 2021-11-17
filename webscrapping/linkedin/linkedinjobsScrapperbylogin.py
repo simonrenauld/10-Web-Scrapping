@@ -29,12 +29,6 @@ import signal
 import sys
 
 
-run = True
-
-def signal_handler(signal, frame):
-    global run
-    print ("exiting")
-    run = False
 
 
 
@@ -61,7 +55,7 @@ find.click()
 
 
 
-url = 'https://www.linkedin.com/jobs/search/?currentJobId=2781536280&f_AL=true&f_WT=2&geoId=92000000&keywords=data&location=Worldwide'
+url = 'https://www.linkedin.com/jobs/search/?geoId=91000014&keywords=data&location=Southeast%20Asia'
 
 
 
@@ -84,20 +78,19 @@ while i <= int(no_of_jobs/25)+1:
     i = i + 1
     try:
      wd.find_element_by_xpath('/html/body/div/div/main/section/button').click()
-     time.sleep(5)
+     time.sleep(1)
     except:
          pass
-         time.sleep(5)
+         time.sleep(1)
               
 ############# Break lope if no new results 
 
     try:
-        wd.find_element_by_class_name('jobs-search__results-list')
-        
+        wd.find_elements_by_xpath("//*[@class='jobs-search-results__list list-style-none']")
     except NoSuchElementException:
         break
 
-job_lists = wd.find_element_by_class_name('jobs-search__results-list')
+job_lists = wd.find_elements_by_xpath("//*[@class='jobs-search-results__list list-style-none']")
 jobs = job_lists.find_elements_by_tag_name('li') # return a list
 
 print(len(jobs))
@@ -112,7 +105,7 @@ location = []
 date = []
 job_link = []
 for job in jobs:
- job_id0 = job.find_element_by_css_selector('div').get_attribute('data-tracking-id')
+ job_id0 = job.find_element_by_css_selector('div').get_attribute('data-control-id')
  job_id.append(job_id0)
   
  job_title0 = job.find_element_by_css_selector('h3').get_attribute('innerText')
@@ -130,51 +123,10 @@ for job in jobs:
  job_link0 = job.find_element_by_css_selector('a').get_attribute('href')
  job_link.append(job_link0)
  
-time.sleep(15)
-"""
+time.sleep(5)
 
-#Get the detailed job descriptions
 
-jd = []
-seniority = []
-emp_type = []
-job_func = []
-industries = []
-for item in range(len(jobs)):
- job_func0=[]
- industries0=[]
- # clicking job to view job details
 
- job_click_path = f'/html/body/div/div/main/section/ul/li/div/a[{item+1}]'
- job_click = job.find_element_by_xpath(job_click_path).click()
- time.sleep(5)
-
- jd_path = '/html/body/main/section/div[2]/section[2]/div'
- jd0 = job.find_element_by_xpath(jd_path).get_attribute('innerText')
- jd.append(jd0)
-
- seniority_path = '/html/body/main/section/div[2]/section[2]/ul/li[1]/span'
- seniority0 = job.find_element_by_xpath(seniority_path).get_attribute('innerText')
- seniority.append(seniority0)
- 
- emp_type_path = '/html/body/main/section/div[2]/section[2]/ul/li[2]/span'
- emp_type0 = job.find_element_by_xpath(emp_type_path).get_attribute('innerText')
- emp_type.append(emp_type0)
- 
- job_func_path = '/html/body/main/section/div[2]/section[2]/ul/li[3]/span'
- job_func_elements = job.find_elements_by_xpath(job_func_path)
- for element in job_func_elements:
-     job_func0.append(element.get_attribute('innerText'))
- job_func_final = ', '.join(job_func0)
- job_func.append(job_func_final)
-industries_path = '/html/body/main/section/div[2]/section[2]/ul/li[4]/span'
-industries_elements = job.find_elements_by_xpath(industries_path)
-for element in industries_elements:
- industries0.append(element.get_attribute('innerText'))
- industries_final = ', '.join(industries0)
- industries.append(industries_final)
-
-"""
 
 job_data = pd.DataFrame({'ID': job_id,
 'Date': date,
@@ -188,10 +140,5 @@ job_data = pd.DataFrame({'ID': job_id,
 job_data.to_csv('.\outputs\dataremoteworldwide.csv',encoding='utf-8-sig')       
 
 
-signal.signal(signal.SIGINT, signal_handler)
-while run:
-    print ("hi")
-    time.sleep(1)
-    # do anything
-    print ("bye")
+
 
